@@ -20,4 +20,12 @@ public class Rental {
     public Movie getMovie() {
         return _movie;
     }
+
+    public Double computeRental() {
+        Double rentalPrice= 2d;
+        if(_daysRented > 2) {
+            rentalPrice += (_daysRented - 2) * 1.5;
+        }
+        return rentalPrice;
+    }
 }

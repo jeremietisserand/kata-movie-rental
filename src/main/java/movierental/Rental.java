@@ -14,37 +14,16 @@ public class Rental {
     }
 
     public Double computeRental() {
-        if (Movie.NEW_RELEASE == movie.getPriceCode()) {
-            return computeNewRealeasePrice();
-        }
-        if (Movie.CHILDRENS == movie.getPriceCode()) {
-            return computeChildrensPrice();
-        }
-        return computeRegularPrice();
-    }
-
-    private double computeRegularPrice() {
-        double rentalPrice = 2d;
-        if(daysRented > 2) {
-            rentalPrice += (daysRented - 2) * 1.5;
+        Movie.MovieType movieType = movie.getMovieType();
+        double rentalPrice = movieType.getFixedPrice();
+        if(daysRented > movieType.getMaximumDaysWithConstantPrice()) {
+            rentalPrice += (daysRented - movieType.getMaximumDaysWithConstantPrice()) * movieType.getExtraPricePerDay();
         }
         return rentalPrice;
-    }
-
-    private double computeChildrensPrice() {
-        double rentalPrice = 1.5d;
-        if(daysRented > 3) {
-            rentalPrice += (daysRented - 3) * 1.5;
-        }
-        return rentalPrice;
-    }
-
-    private double computeNewRealeasePrice() {
-        return daysRented * 3d;
     }
 
     public int computeRenterPoints() {
-        if ((movie.getPriceCode() == Movie.NEW_RELEASE) && daysRented > 1) {
+        if ((movie.getPriceCode() == Movie.MovieType.NEW_RELEASE.getPriceCode()) && daysRented > 1) {
             return 2;
         }
         return 1;

@@ -6,7 +6,7 @@ import java.util.List;
 public class Customer {
 
     private final String name;
-    private final List<Rental> rentals = new ArrayList<Rental>();
+    private final List<Rental> rentals = new ArrayList<>();
 
     public Customer(String name) {
         this.name = name;
@@ -21,22 +21,16 @@ public class Customer {
     }
 
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
-        StringBuilder result = new StringBuilder("Rental Record for " + getName() + "\n");
-
-        for (Rental each : rentals) {
-            frequentRenterPoints += each.computeRenterPoints();
-            result.append(each.displayRental());
-            totalAmount += each.computeRental();
-        }
-        // add footer lines
-        appendFooterLines(totalAmount, frequentRenterPoints, result);
-        return result.toString();
+        return displayRentalCustomerInfo(CustomerRentalSummary.buildFromRentals(rentals));
     }
 
-    private void appendFooterLines(double totalAmount, int frequentRenterPoints, StringBuilder result) {
-        result.append("Amount owed is ").append(totalAmount).append("\n");
-        result.append("You earned ").append(frequentRenterPoints).append(" frequent renter points");
+    private String displayRentalCustomerInfo(CustomerRentalSummary summary) {
+        return displayRentalRecordForCustomer() +
+                rentals.stream().map(Rental::displayRental).reduce(String::concat).orElse("") +
+                summary.displaySummary();
+    }
+
+    private String displayRentalRecordForCustomer() {
+        return "Rental Record for " + getName() + "\n";
     }
 }
